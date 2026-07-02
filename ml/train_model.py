@@ -119,7 +119,7 @@ print("Classification Report (Best Model):")
 best_preds = best_model.predict(X_test_vec)
 print(classification_report(y_test, best_preds))
 
-# 9. Save artifacts
+# 9. Save files
 joblib.dump(best_model,  os.path.join(MODELS_DIR, "model.pkl"))
 joblib.dump(vectorizer,  os.path.join(MODELS_DIR, "vectorizer.pkl"))
 joblib.dump(le,          os.path.join(MODELS_DIR, "label_encoder.pkl"))
