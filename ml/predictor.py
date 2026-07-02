@@ -35,16 +35,6 @@ def clean_text(text: str) -> str:
     return text
 
 def predict(job_title: str) -> dict:
-    """
-    Predict job category from a job title string.
-
-    Returns:
-        {
-            "category"   : str   — predicted category label
-            "confidence" : float — confidence % (0–100)
-            "all_scores" : dict  — {category: confidence%} for all classes
-        }
-    """
     _load_models()
 
     # Weight title 3x (same as training)
@@ -78,4 +68,5 @@ def get_all_categories() -> list:
     """Return list of all known category labels."""
     _load_models()
     return list(_le.classes_)
+
 
