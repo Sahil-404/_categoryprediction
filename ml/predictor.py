@@ -4,7 +4,7 @@ import joblib
 import numpy as np
 
 #Paths
-DATA_PATH = "data/jobs_sample_200.csv"
+DATA_PATH  = "data/Jobs_category_data - Sheet1.csv"
 MODELS_DIR = "models"
 
 #Load models data
