@@ -36,8 +36,6 @@ def clean_text(text: str) -> str:
 
 def predict(job_title: str) -> dict:
     _load_models()
-
-    # Weight title 3x (same as training)
     cleaned = clean_text(job_title)
     combined = f"{cleaned} {cleaned} {cleaned}"
 
@@ -48,7 +46,7 @@ def predict(job_title: str) -> dict:
     category   = _le.inverse_transform([idx])[0]
     confidence = float(np.max(proba)) * 100
 
-    # Build all-scores dict (top categories by confidence)
+    # Build all-scores dict 
     all_scores = {
         _le.inverse_transform([i])[0]: round(float(p) * 100, 1)
         for i, p in enumerate(proba)
@@ -58,7 +56,7 @@ def predict(job_title: str) -> dict:
     )
 
     return {
-        "category"   : category,
+        "category" : category,
         "confidence" : round(confidence, 1),
         "all_scores" : all_scores,
     }
