@@ -27,7 +27,7 @@ df = df.rename(columns={
     "categories" : "Category",
 })
 
-# 3. Consolidate near-duplicate categories
+# 3. Handling duplicate values
 category_map = {
     "Technical"                                : "Information Technology",
     "Digital Innovation & Technology"          : "Information Technology",
