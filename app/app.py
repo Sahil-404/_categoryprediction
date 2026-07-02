@@ -1,6 +1,3 @@
-"""
-Run with: streamlit run app/app.py
-"""
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -17,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-#Custom CSS
+#CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -291,7 +288,7 @@ with col_right:
 
 #Submission History
 st.markdown("---")
-st.markdown("### Submission History")
+st.markdown("Submission History")
 
 if st.session_state.history:
     hist_df = pd.DataFrame(st.session_state.history)
