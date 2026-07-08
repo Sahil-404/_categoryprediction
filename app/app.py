@@ -6,6 +6,8 @@ import streamlit as st
 import pandas as pd
 from ml.predictor import predict, get_all_categories
 
+HISTORY_FILE = "data/submission_history.csv"
+
 #Page Config 
 st.set_page_config(
     page_title="NNHire — Job Category Predictor",
@@ -150,9 +152,12 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Session State 
+# Session State
 if "history" not in st.session_state:
-    st.session_state.history = []
+    if os.path.exists(HISTORY_FILE):
+        st.session_state.history = pd.read_csv(HISTORY_FILE).to_dict("records")
+    else:
+        st.session_state.history = []
 
 # Header 
 st.markdown("""
@@ -179,6 +184,10 @@ with col_left:
 
     #Prediction 
     if predict_btn and job_title.strip():
+        if len(job_title.strip()) < 3:
+            st.warning("Please enter a valid job title.")
+            st.stop()
+
         try:
             result = predict(job_title.strip())
 
@@ -227,6 +236,9 @@ with col_left:
             unsafe_allow_html=True
         )
 
+        if conf < 40:
+            st.warning("Low confidence — please verify and edit the category manually.")
+
         st.markdown('<div class="section-title">Step 2 — Edit if Needed</div>', unsafe_allow_html=True)
 
         try:
@@ -246,12 +258,16 @@ with col_left:
         confirm_btn = st.button("Confirm & Save", use_container_width=True)
         if confirm_btn:
             st.session_state.history.append({
-                "Job Title"        : r["title"],
-                "Predicted"        : r["category"],
-                "Final Category"   : final_category,
-                "Confidence (%)"   : f"{conf:.1f}",
-                "Edited?"          : "Yes" if final_category != r["category"] else "No",
+                "Job Title"      : r["title"],
+                "Predicted"      : r["category"],
+                "Final Category" : final_category,
+                "Confidence (%)" : f"{conf:.1f}",
+                "Edited?"        : "Yes" if final_category != r["category"] else "No",
             })
+
+            hist_df = pd.DataFrame(st.session_state.history)
+            hist_df.to_csv(HISTORY_FILE, index=False)
+
             st.success(f"Saved: **{r['title']}** → **{final_category}**")
             del st.session_state["last_result"]
 
