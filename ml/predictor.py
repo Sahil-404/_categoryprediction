@@ -11,6 +11,22 @@ MODELS_DIR = "models"
 _model      = None
 _vectorizer = None
 _le         = None
+SYNONYMS = {
+    "programmer"   : "developer",
+    "coder"        : "developer",
+    "engineer"     : "developer",
+    "executive"    : "manager",
+    "officer"      : "manager",
+    "specialist"   : "analyst",
+    "associate"    : "analyst",
+    "lead"         : "manager",
+    "head"         : "manager",
+    "coordinator"  : "analyst",
+    "consultant"   : "analyst",
+    "representative": "executive",
+    "technician"   : "engineer",
+    "administrator": "manager",
+}
 
 def _load_models():
     global _model, _vectorizer, _le
@@ -34,9 +50,15 @@ def clean_text(text: str) -> str:
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
+def expand_synonyms(text: str) -> str:
+    words = text.split()
+    words = [SYNONYMS.get(word, word) for word in words]
+    return " ".join(words)
+
 def predict(job_title: str) -> dict:
     _load_models()
     cleaned = clean_text(job_title)
+    cleaned = expand_synonyms(cleaned)
     combined = f"{cleaned} {cleaned} {cleaned}"
 
     vec   = _vectorizer.transform([combined])
